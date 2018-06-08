@@ -2,6 +2,7 @@ import React from 'react'
 import {Text, View, StyleSheet} from 'react-native';
 import {
     Container,
+    Header,
     Content,
     Form,
     Item,
@@ -9,13 +10,14 @@ import {
     Label,
     Textarea,
     Button,
+
 } from 'native-base';
 
 import {Icon} from 'react-native-elements'
-import AssignmentServiceClient from "../services/AssignmentServiceClient";
+import ExamServiceClient from "../services/ExamServiceClient";
 
-class Assignment extends React.Component {
-    static navigationOptions = {title: "Assignment"}
+class EssayQuestionWidget extends React.Component {
+    static navigationOptions = {title: "Essay"}
 
     constructor(props) {
         super(props)
@@ -24,64 +26,84 @@ class Assignment extends React.Component {
             title: '',
             description: '',
             points: '',
-            id: '',
-            assignment: {}
+            id: ''
         }
 
         this.togglePreview = this.togglePreview.bind(this);
-        this.addAssignment = this.addAssignment.bind(this);
-        this.assignmentServiceClient = AssignmentServiceClient.instance
+        this.addQuestion = this.addQuestion.bind(this);
+        this.examServiceClient = ExamServiceClient.instance
 
+    }
+
+    isEmpty(obj) {
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key))
+                return false;
+        }
+        return true;
     }
 
     componentDidMount() {
         const {navigation} = this.props;
-        const courseId = navigation.getParam("courseId")
-        const moduleId = navigation.getParam("moduleId")
-        const lessonId = navigation.getParam("lessonId")
-        const topicId = navigation.getParam("topicId")
-        const assignment = navigation.getParam("assignment")
+        const examId = navigation.getParam("examId");
+        const question = navigation.getParam("question");
+        const unMount = navigation.getParam("unMount");
+        console.log("inside essay");
+        console.log(unMount);
 
-        this.setState({
-            courseId: courseId,
-            moduleId: moduleId,
-            lessonId: lessonId,
-            topicId: topicId,
-            title: assignment.title,
-            description: assignment.description,
-            id: assignment.id,
-            points: assignment.points
-        })
+        if (!this.isEmpty(question)) {
+            this.setState({
+
+                examId: examId,
+                title: question.title,
+                description: question.description,
+                id: question.id,
+                points: question.points,
+                unMount:unMount
+
+            })
+        }
+        else {
+            this.setState({
+                examId: examId
+            });
+        }
     }
 
+    // componentWillUnmount(){
+    //
+    //     console.log(this.state.unMount);
+    //
+    //     this.state.unMount();
+    // }
 
-    addAssignment() {
+
+    addQuestion() {
 
         if (this.state.id == undefined || this.state.id === '') {
-            this.assignmentServiceClient.createAssignment(this.state.topicId, {
+
+            this.examServiceClient.createEssayQuestion(this.state.examId, {
                 title: this.state.title,
                 description: this.state.description, points: this.state.points
             }).then(
                 this.props.navigation
-                    .navigate("AssignmentList", {
-                        courseId: this.state.courseId,
-                        moduleId: this.state.moduleId,
-                        lessonId: this.state.lessonId,
-                        topicId: this.state.topicId
+                    .navigate("QuestionList", {
+                        examId: this.state.examId,
+                        unMount:this.state.unMount
                     })
             )
         }
         else {
-            this.assignmentServiceClient.updateAssignment(this.state.id, {
-                title: this.state.title,
-                description: this.state.description, points: this.state.points
+
+            this.examServiceClient.updateEssay(this.state.id, {
+                title: this.state.title, id: this.state.id,
+                description: this.state.description, points: this.state.points, examId: this.state.examId
             }).then(
                 this.props.navigation
-                    .navigate("AssignmentList", {
-                        courseId: this.state.courseId,
-                        moduleId: this.state.moduleId,
-                        lessonId: this.state.lessonId,
-                        topicId: this.state.topicId
+                    .navigate("QuestionList", {
+                        examId: this.state.examId,
+                        unMount:this.state.unMount
+
                     })
             )
 
@@ -101,6 +123,8 @@ class Assignment extends React.Component {
         let title;
         let description;
         let points;
+
+        const {goBack} = this.props.navigation;
         return (
             <Container>
                 <View style={{padding: 10}}>
@@ -113,9 +137,9 @@ class Assignment extends React.Component {
                           onPress={this.togglePreview}/>}
                 </View>
                 <Content>
-                    {!this.state.preview && <Form style={{margin: 5}}>
+                    {!this.state.preview && <Form style={{marginTop: 5}}>
                         <Item floatingLabel>
-                            <Label>Assignment Title</Label>
+                            <Label>Title</Label>
                             <Input ref={(el) => {
                                 title = el;
                             }}
@@ -138,12 +162,9 @@ class Assignment extends React.Component {
                                    onChangeText={(description) => this.setState({description})}
                                    value={this.state.description}/>
                         </Item>
-                        <Button full style={{marginTop: 20, borderRadius: 5}} danger onPress={this.addAssignment}>
-                            <Text>Save</Text>
-                        </Button>
                     </Form>}
                     {this.state.preview &&
-                    <View style={{margin: 10}}>
+                    <View style={{marginTop: 10}}>
                         <View style={{flex: 1, flexDirection: 'row'}}>
                             <View style={{width: '70%'}}>
                                 <Text style={styles.headingText}>{this.state.title}</Text>
@@ -152,26 +173,17 @@ class Assignment extends React.Component {
                                 <Text style={styles.headingTextForPoints}> {this.state.points}pts</Text>
                             </View>
                         </View>
-                        <Text style={{fontSize: 20, marginTop: 5}}>
+                        <Text style={{fontSize: 20, marginTop: 5, marginLeft: 18}}>
                             {this.state.description}
                         </Text>
-                        <Label style={{marginTop: 10}}>Essay Answer</Label>
-                        <Textarea rowSpan={3} style={styles.container}/>
-                        <Label style={{marginTop: 10}}>Upload a file</Label>
-                        <View rowSpan={1} style={styles.file}>
-                            <Button style={{margin: 10, padding: 5, paddingLeft: 10, paddingRight: 10}} light>
-                                <Text>Choose File</Text>
-                            </Button>
-                        </View>
-                        <Label>Submit a link</Label>
-                        <Input style={styles.container}/>
-                        <Button full style={{marginTop: 20, borderRadius: 5}} danger>
-                            <Text>Cancel</Text>
-                        </Button>
-                        <Button full style={{marginTop: 20, borderRadius: 5}} success>
-                            <Text>Save</Text>
-                        </Button>
+                        <Textarea style={styles.container} rowSpan={5} bordered></Textarea>
                     </View>}
+                    <Button full style={{margin: 10, borderRadius: 5}} success onPress={this.addQuestion}>
+                        <Text>Submit</Text>
+                    </Button>
+                    <Button full style={{margin: 10, borderRadius: 5}} danger onPress={() => goBack()}>
+                        <Text>Cancel</Text>
+                    </Button>
                 </Content>
             </Container>
         );
@@ -183,27 +195,20 @@ const styles = StyleSheet.create({
     container: {
         borderRadius: 4,
         borderWidth: 1,
-        //borderColor: '#d6d7da',
         borderColor: 'grey',
         backgroundColor: 'white',
-        marginTop: 6,
+        margin: 6,
         padding: 5
     },
-    file: {
-        borderRadius: 4,
-        borderWidth: 1,
-        borderColor: 'grey',
-        marginTop: 6,
-        padding: 3,
-        marginBottom: 3
-    },
     headingText: {
-        fontSize: 30
+        fontSize: 30,
+        marginLeft: 18
     },
     headingTextForPoints: {
-        fontSize: 30
+        fontSize: 30,
+        marginRight: 1
     }
 
 });
 
-export default Assignment
+export default EssayQuestionWidget

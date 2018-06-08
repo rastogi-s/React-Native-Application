@@ -14,29 +14,27 @@ class AssignmentServiceClient {
     }
 
     createAssignmentUrl(){
-        const ASSIGNMENT_API_URL = 'http://192.168.159.2:8080/api/assignment';
+        //const ASSIGNMENT_API_URL = 'http://192.168.159.2:8080/api/assignment';
         // var url=window.location.href;
         // if(!url.toString().includes('10.0.0.22') && !url.toString().includes('localhost'))
-        //     return 'https://webdev-rastogi-shubham.herokuapp.com/api/course';
+             return 'https://webdev-rastogi-shubham.herokuapp.com/api/assignment';
         // else
-        return ASSIGNMENT_API_URL;
+        //return ASSIGNMENT_API_URL;
 
     }
 
 
     createTopicUrl(){
-        const TOPIC_API_URL = 'http://192.168.159.2:8080/api/topic';
-        // var url=window.location.href;
-        // if(!url.toString().includes('10.0.0.22') && !url.toString().includes('localhost'))
-        //     return 'https://webdev-rastogi-shubham.herokuapp.com/api/course';
-        // else
-        return TOPIC_API_URL;
+        // const TOPIC_API_URL = 'http://192.168.159.2:8080/api/topic';
+        // // var url=window.location.href;
+        // // if(!url.toString().includes('10.0.0.22') && !url.toString().includes('localhost'))
+             return 'https://webdev-rastogi-shubham.herokuapp.com/api/topic';
+        // // else
+        // return TOPIC_API_URL;
 
     }
 
     createAssignment(topicId,assignment) {
-        console.log(topicId);
-        console.log(assignment);
         return fetch(this.createTopicUrl()+'/'+topicId+'/'+'assignment',{
             body: JSON.stringify(assignment),
             headers: {
@@ -51,20 +49,7 @@ class AssignmentServiceClient {
     }
 
 
-    // findAllQuestionsForExam(examId) {
-    //     return fetch(this.createExamUrl()+'/'+examId+'/question')
-    //         .then(function (response) {
-    //             if(response.headers.get("content-type")!=null)
-    //                 return response.json();
-    //             else return null;
-    //         });
-    // }
-
     updateAssignment(assignmentId,assignment) {
-        console.log(assignmentId);
-        console.log(assignment);
-        console.log("in here");
-        console.log('waht!!!');
 
         return fetch(this.createAssignmentUrl() + '/' + assignmentId,
             {

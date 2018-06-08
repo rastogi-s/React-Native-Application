@@ -20,8 +20,8 @@ import {
 import {Icon} from 'react-native-elements'
 import ExamServiceClient from "../services/ExamServiceClient";
 
-class MultipleChoiceQuestionEditor extends React.Component {
-    static navigationOptions = {title: "Multiple Choice Question Editor"}
+class MultipleChoiceQuestionWidget extends React.Component {
+    static navigationOptions = {title: "Multiple Choice"}
 
     constructor(props) {
         super(props)
@@ -40,6 +40,7 @@ class MultipleChoiceQuestionEditor extends React.Component {
         this.addChoice = this.addChoice.bind(this);
         this.addQuestion = this.addQuestion.bind(this);
         this.deleteChoice = this.deleteChoice.bind(this);
+        this.selectRadio = this.selectRadio.bind(this);
         this.examServiceClient = ExamServiceClient.instance
 
     }
@@ -57,8 +58,7 @@ class MultipleChoiceQuestionEditor extends React.Component {
         const examId = navigation.getParam("examId");
         const question = navigation.getParam("question");
         //const questionId = navigation.getParam("questionId");
-        console.log(examId);
-        console.log(question);
+        const unMount = navigation.getParam("unMount")
         if(!this.isEmpty(question)) {
             this.setState({
 
@@ -68,7 +68,8 @@ class MultipleChoiceQuestionEditor extends React.Component {
                 id: question.id,
                 points: question.points,
                 choice: question.choice,
-                choices: question.choices
+                choices: question.choices,
+                unMount:unMount
 
             })
         }
@@ -77,6 +78,11 @@ class MultipleChoiceQuestionEditor extends React.Component {
                 examId: examId});
         }
     }
+
+    // componentWillUnmount(){
+    //
+    //     this.state.unMount();
+    // }
 
     deleteChoice(index){
         var choices=this.state.choices.filter((choice,i) => {
@@ -91,7 +97,6 @@ class MultipleChoiceQuestionEditor extends React.Component {
     addQuestion() {
 
         if (this.state.id == undefined || this.state.id === '') {
-            console.log('add question')
             this.examServiceClient.createMultipleChoiceQuestion(this.state.examId, {
                 title: this.state.title,
                 description: this.state.description, points: this.state.points,
@@ -99,13 +104,12 @@ class MultipleChoiceQuestionEditor extends React.Component {
             }).then(
                 this.props.navigation
                     .navigate("QuestionList", {
-                        examId: this.state.examId,
+                        examId: this.state.examId
 
                     })
             )
         }
         else {
-            console.log('update question')
             this.examServiceClient.updateMulti(this.state.id, {
                 title: this.state.title,
                 description: this.state.description, points: this.state.points,
@@ -113,7 +117,7 @@ class MultipleChoiceQuestionEditor extends React.Component {
             }).then(
                 this.props.navigation
                     .navigate("QuestionList", {
-                        examId: this.state.examId,
+                        examId: this.state.examId
 
                     })
             )
@@ -123,29 +127,31 @@ class MultipleChoiceQuestionEditor extends React.Component {
 
     }
 
+    selectRadio(){
+
+        // (choice) => this.setState({choice})
+    }
+
     addChoice() {
 
         var choices = this.state.choices;
         choices.push({items: this.state.choicetext});
-        this.setState({choices: choices});
-        this.setState({choictext: ''});
-
+        this.setState({choices: choices, choicetext: ''});
     }
 
 
+
     togglePreview() {
-        console.log('toggle preview');
         this.setState({preview: !this.state.preview})
     }
 
     render() {
-        //console.log(this.state);
         let title;
         let description;
         let points;
         let choice;
         let choicetext;
-        let selectedList;
+        const {goBack} = this.props.navigation;
         return (
             <Container>
                 <View style={{padding: 10}}>
@@ -158,9 +164,9 @@ class MultipleChoiceQuestionEditor extends React.Component {
                           onPress={this.togglePreview}/>}
                 </View>
                 <Content>
-                    {!this.state.preview && <Form style={{margin: 5}}>
+                    {!this.state.preview && <Form style={{marginTop: 5}}>
                         <Item floatingLabel>
-                            <Label>Assignment Title</Label>
+                            <Label>Title</Label>
                             <Input ref={(el) => {
                                 title = el;
                             }}
@@ -202,12 +208,14 @@ class MultipleChoiceQuestionEditor extends React.Component {
                                       onPress={() => this.addChoice()}/>
                             </View></View>
 
-                        <List>
+                        <List style={{marginTop: 5,paddingRight:18,paddingLeft:2}}>
                             {this.state.choices.map((c, index) => (
                                 <ListItem
-                                    key={index}>
-                                    <Left >
-                                        <Radio style={{marginRight:8 }} onSelect={(choice) => this.setState({choice})}/>
+                                    key={index} onPress={() => this.setState({choice:c.items})}
+                                    style={{ backgroundColor: (this.state.choice == c.items) ? 'grey':'white'}} >
+                                    <Left>
+                                        <Radio style={{marginLeft:5,marginRight:8 }}  onPress={() => this.setState({index,choice:c.items})}
+                                               selected={this.state.choice == c.items}/>
                                         <Text ref={(el) => {
                                             choice = el;
                                         }}>{c.items}</Text>
@@ -218,13 +226,9 @@ class MultipleChoiceQuestionEditor extends React.Component {
                                 </ListItem>
                             ))}
                         </List>
-
-                        <Button full style={{marginTop: 20, borderRadius: 5}} danger onPress={this.addQuestion}>
-                            <Text>Save</Text>
-                        </Button>
                     </Form>}
                     {this.state.preview &&
-                    <View style={{margin: 10}}>
+                    <View style={{marginTop: 10}}>
                         <View style={{flex: 1, flexDirection: 'row'}}>
                             <View style={{width: '70%'}}>
                                 <Text style={styles.headingText}>{this.state.title}</Text>
@@ -233,18 +237,18 @@ class MultipleChoiceQuestionEditor extends React.Component {
                                 <Text style={styles.headingTextForPoints}> {this.state.points}pts</Text>
                             </View>
                         </View>
-                        <Text style={{fontSize: 20, marginTop: 5}}>
+                        <Text style={{fontSize: 20, marginTop: 5,marginLeft:18}}>
                             {this.state.description}
                         </Text>
-                        <List style={{marginTop: 5}}>
+                        <List style={{marginTop: 5,paddingRight:18,paddingLeft:2}}>
                             {this.state.choices.map((c, index) => (
                                 <ListItem
-
-                                    key={index} selected={this.state.listSelected}>
-
+                                    key={index}
+                                    onPress ={() => this.setState({index})}
+                                    style={{backgroundColor: (this.state.index==index) ? 'grey':'white'}}>
                                     <Left>
-                                        <Radio style={{marginRight:8 }}
-                                               onSelect={() => this.setState({listSelected: !this.state.listSelected})}/>
+                                        <Radio style={{marginLeft:8,marginRight:8 }}  onPress ={() => this.setState({index})}
+                                        selected={this.state.index==index}/>
                                         <Text ref={(el) => {
                                             choice = el;
                                         }}>{c.items}</Text>
@@ -252,13 +256,13 @@ class MultipleChoiceQuestionEditor extends React.Component {
                                 </ListItem>
                             ))}
                         </List>
-                        <Button full style={{marginTop: 20, borderRadius: 5}} danger>
-                            <Text>Cancel</Text>
-                        </Button>
-                        <Button full style={{marginTop: 20, borderRadius: 5}} success>
-                            <Text>Save</Text>
-                        </Button>
                     </View>}
+                    <Button full style={{margin:10, borderRadius: 5}} success onPress={this.addQuestion}>
+                        <Text>Submit</Text>
+                    </Button>
+                    <Button full style={{margin: 10, borderRadius: 5}} danger onPress={() => goBack()}>
+                        <Text>Cancel</Text>
+                    </Button>
                 </Content>
             </Container>
         );
@@ -267,30 +271,32 @@ class MultipleChoiceQuestionEditor extends React.Component {
 
 
 const styles = StyleSheet.create({
-    container: {
-        borderRadius: 4,
-        borderWidth: 1,
-        //borderColor: '#d6d7da',
-        borderColor: 'grey',
-        backgroundColor: 'white',
-        marginTop: 6,
-        padding: 5
-    },
-    file: {
-        borderRadius: 4,
-        borderWidth: 1,
-        borderColor: 'grey',
-        marginTop: 6,
-        padding: 3,
-        marginBottom: 3
-    },
+    // container: {
+    //     borderRadius: 4,
+    //     borderWidth: 1,
+    //     //borderColor: '#d6d7da',
+    //     borderColor: 'grey',
+    //     backgroundColor: 'white',
+    //     marginTop: 6,
+    //     padding: 5
+    // },
+    // file: {
+    //     borderRadius: 4,
+    //     borderWidth: 1,
+    //     borderColor: 'grey',
+    //     marginTop: 6,
+    //     padding: 3,
+    //     marginBottom: 3
+    // },
     headingText: {
-        fontSize: 30
+        fontSize: 30,
+        marginLeft:18
     },
     headingTextForPoints: {
-        fontSize: 30
+        fontSize: 30,
+        marginRight:1
     }
 
 });
 
-export default MultipleChoiceQuestionEditor
+export default MultipleChoiceQuestionWidget

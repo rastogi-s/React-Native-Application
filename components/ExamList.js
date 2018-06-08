@@ -1,15 +1,8 @@
 import React, {Component} from 'react'
-import {StyleSheet, View} from 'react-native'
-import {Text,Icon} from 'react-native-elements'
+import {StyleSheet, View,ScrollView} from 'react-native'
+import {Text,ListItem} from 'react-native-elements'
 import FetchServiceClient from "../services/FetchServiceClient";
-import {
-    List,
-    ListItem,
-    Button,
-    Left,
-    Right,
-
-} from 'native-base';
+import {Button, Icon} from 'native-base';
 import ExamServiceClient from "../services/ExamServiceClient";
 
 class ExamList extends Component {
@@ -66,36 +59,32 @@ class ExamList extends Component {
                 examWidgets.push(widgets[w]);
         }
         return (
-            <View style={{padding: 15}}>
-                <List>
-                    {examWidgets.map((widget, index) => (
-                        <ListItem
-                            onPress={() => this.props.navigation
-                                .navigate("QuestionList", {
-                                    examId: widget.id,
-                                    courseId: this.state.courseId,
-                                    moduleId: this.state.moduleId,
-                                    lessonId: this.state.lessonId,
-                                    topicId: this.state.topicId
-                                })}
-                            key={index}>
-                            <Left>
-                                <Text>{widget.title}</Text>
-                            </Left>
-                            <Right>
-                                <Icon name="trash" type="font-awesome" onPress={() => this.delete(widget.id)}/>
-                            </Right>
-                        </ListItem>
-                    ))}
-                </List>
+            <ScrollView style={{padding: 15}}>
+                {examWidgets.map((widget, index) => (
+                <ListItem
+                    onPress={() => this.props.navigation
+                        .navigate("QuestionList", {
+                            examId: widget.id,
+                            courseId: this.state.courseId,
+                            moduleId: this.state.moduleId,
+                            lessonId: this.state.lessonId,
+                            topicId: this.state.topicId
+                        })}
+                    title={widget.title}
+                    key={index}
+                    leftIcon={{name:'assessment' ,color:'black'}}
+                    rightIcon={<Icon name="trash"  onPress={() => this.delete(widget.id)}/>}
+                />
+                ))}
                 <Button full style={styles.button} onPress={() => this.props.
-                navigation.navigate("Exam",{
+                navigation.navigate("ExamWidget",{
                     courseId: this.state.courseId,
                     moduleId: this.state.moduleId,
                     lessonId: this.state.lessonId,
                     topicId:this.state.topicId,
-                    exam:{points:0}})} success><Text>Add Exam</Text></Button>
-            </View>
+                    exam:{points:0},
+                    unMount:this.updateList})}   success><Text>Add Exam</Text></Button>
+            </ScrollView>
         )
     }
 }

@@ -1,15 +1,8 @@
 import React, {Component} from 'react'
-import {View,StyleSheet} from 'react-native'
-import {Text,Icon} from 'react-native-elements'
+import {View,StyleSheet,ScrollView} from 'react-native'
+import {Text,ListItem} from 'react-native-elements'
 import FetchServiceClient from "../services/FetchServiceClient";
-import {
-    List,
-    ListItem,
-    Button,
-    Left,
-    Right,
-
-} from 'native-base';
+import {Icon, Button} from 'native-base';
 import AssignmentServiceClient from "../services/AssignmentServiceClient";
 
 class AssignmentList extends Component {
@@ -31,7 +24,6 @@ class AssignmentList extends Component {
     }
 
     componentWillReceiveProps(props){
-        console.log(props);
         const {navigation} = props;
         const courseId = navigation.getParam("courseId")
         const moduleId = navigation.getParam("moduleId")
@@ -86,8 +78,7 @@ class AssignmentList extends Component {
                 assignmentWidgets.push(widgets[w]);
         }
         return (
-            <View style={{padding: 15}}>
-                <List>
+            <ScrollView style={{padding: 15}}>
                 {assignmentWidgets.map((widget, index) => (
                     <ListItem
                         onPress={() => this.props.navigation
@@ -98,16 +89,12 @@ class AssignmentList extends Component {
                                 lessonId: this.state.lessonId,
                                 topicId:this.state.topicId
                             })}
-                        key={index}>
-                        <Left>
-                            <Text>{widget.title}</Text>
-                        </Left>
-                        <Right>
-                            <Icon name="trash" type="font-awesome" onPress={() => this.delete(widget.id)}/>
-                        </Right>
-                    </ListItem>
+                        title={widget.title}
+                        key={index}
+                        leftIcon={{name:'assignment' ,color:'black'}}
+                        rightIcon={<Icon name="trash"  onPress={() => this.delete(widget.id)}/>}
+                    />
                 ))}
-                </List>
                 <Button full style={styles.button} onPress={() => this.props.
                 navigation.navigate("Assignment",{
                     courseId: this.state.courseId,
@@ -115,7 +102,7 @@ class AssignmentList extends Component {
                     lessonId: this.state.lessonId,
                     topicId:this.state.topicId,
                     assignment:{points:0}})} success><Text>Add Assignment</Text></Button>
-            </View>
+            </ScrollView>
         )
     }
 }

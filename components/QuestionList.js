@@ -1,15 +1,9 @@
 import React, {Component} from 'react'
-import {View, Alert, StyleSheet} from 'react-native'
-import {Text, ListItem} from 'react-native-elements'
+import {ScrollView, StyleSheet} from 'react-native'
+import { ListItem} from 'react-native-elements'
 import ExamServiceClient from "../services/ExamServiceClient";
-import {
-    List,
-    //ListItem,
-    Button,
-    Left,
-    Right,
-
-} from 'native-base';
+import {Icon} from 'native-base';
+import QuestionTypePicker from "../elements/QuestionTypePicker";
 
 class QuestionList extends Component {
     static navigationOptions = {title: 'Questions'}
@@ -21,7 +15,8 @@ class QuestionList extends Component {
             questions: [],
             examId: 1
         }
-        //this.renderListItems=this.renderListItems.bind(this);
+        this.delete = this.delete.bind(this);
+        this.updateList = this.updateList.bind(this);
     }
 
     componentDidMount() {
@@ -44,44 +39,82 @@ class QuestionList extends Component {
             .then(questions => this.setState({questions: questions}))
     }
 
+    updateList() {
+
+        this.examServiceClient.findAllQuestionsForExam(this.state.examId)
+            .then(questions => this.setState({questions: questions}))
+    }
+
+
+    delete(id) {
+
+        let question = this.state.questions.filter((question) => {
+            if (id === question.id)
+                return true
+            else
+                return false
+        })
+
+        var quest = question[0];
+
+        var qType = 'hhhhh';
+        if (quest.type === 'MultipleChoice')
+            qType = 'multi'
+        else if (quest.type === 'FillInTheBlanks')
+            qType = 'blanks'
+        else if (quest.type === 'TrueFalse')
+            qType = 'truefalse'
+        else if (quest.type === 'Essay')
+            qType = 'essay'
+
+        this.examServiceClient.deleteQuestion(id, qType, this.updateList);
+
+    }
 
     render() {
 
-        var icons = {TrueFalse:'check',Essay:'format-align-left',MultipleChoice:'list',FillInTheBlanks:'code'}
-        var subtitle = {TrueFalse:'True or False',Essay:'Essay',MultipleChoice:'Multiple choice',
-            FillInTheBlanks:'Fill-in the blanks'}
-        var navigation = {TrueFalse:'TrueFalseQuestionEditor',Essay:'EssayQuestionEditor',
-            MultipleChoice:'MultipleChoiceQuestionEditor',FillInTheBlanks:'FillInTheBlanksQuestionEditor'}
+        var icons = {TrueFalse: 'check', Essay: 'format-align-left', MultipleChoice: 'list', FillInTheBlanks: 'code'}
+        var subtitle = {
+            TrueFalse: 'True or False', Essay: 'Essay', MultipleChoice: 'Multiple choice',
+            FillInTheBlanks: 'Fill-in the blanks'
+        }
+        var navigation = {
+            TrueFalse: 'TrueOrFalseQuestionWidget', Essay: 'EssayQuestionWidget',
+            MultipleChoice: 'MultipleChoiceQuestionWidget', FillInTheBlanks: 'FillInTheBlanksQuestionWidget'
+        }
 
 
         return (
-            <View style={{padding: 15}}>
-                {this.state.questions.map((question,index) => (
 
+            <ScrollView style={{padding: 15}}>
+                {this.state.questions.map((question, index) => (
                     <ListItem
                         onPress={() =>
                             this.props.navigation.navigate(navigation[question.type],
-                                    {examId:this.state.examId,
-                                        question:question})}
+                                {
+                                    examId: this.state.examId,
+                                    question: question,
+
+                                })}
                         key={index}
-                        leftIcon={{ name: icons[question.type] }}
+                        leftIcon={{name: icons[question.type], color: 'black'}}
+                        //rightIcon={{name:'delete',color:'black',onPress:{()=> this.delete(question.id)}}}
+                        rightIcon={<Icon name={'trash'} size={20} onPress={() => this.delete(question.id)}/>}
                         subtitle={subtitle[question.type]}
                         title={question.title}/>
 
                 ))}
-                <Button full style={styles.button} onPress={() => this.props.
-                navigation.navigate("MultipleChoiceQuestionEditor",{
-                    examId:this.state.examId,
-                    question:{}})} success><Text>Add Questions</Text></Button>
-            </View>
+
+                <QuestionTypePicker examId={this.state.examId} navigation={this.props.navigation} unMount={this.updateList}/>
+            </ScrollView>
         )
     }
 }
 
 const styles = StyleSheet.create({
     button: {
-        marginTop:10,
-        borderRadius:5
+        marginTop: 10,
+        borderRadius: 5
 
     }
 

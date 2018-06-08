@@ -1,10 +1,9 @@
 import React from 'react';
 import {StyleSheet, Text, View, StatusBar, ScrollView} from 'react-native';
 import FixedHeader from './elements/FixedHeader'
-import TrueFalseQuestionEditor from './elements/TrueFalseQuestionEditor'
-import MultipleChoiceQuestionEditor from './elements/MultipleChoiceQuestionEditor'
+import TrueOrFalseQuestionWidget from './elements/TrueOrFalseQuestionWidget'
+import MultipleChoiceQuestionWidget from './elements/MultipleChoiceQuestionWidget'
 import {createStackNavigator} from 'react-navigation'
-import {Button} from 'react-native-elements'
 import CourseList from './components/CourseList'
 import ModuleList from './components/ModuleList'
 import LessonList from './components/LessonList'
@@ -13,11 +12,12 @@ import QuestionList from './components/QuestionList'
 import AssignmentList from './components/AssignmentList'
 import ExamList from './components/ExamList'
 import Assignment from './elements/Assignment'
-import Exam from './elements/Exam'
+import ExamWidget from './elements/ExamWidget'
 import 'es6-symbol/implement';
 import TopicList from "./components/TopicList";
-import FillInTheBlanksQuestionEditor from "./elements/FillInTheBlanksQuestionEditor";
-import EssayQuestionEditor from "./elements/EssayQuestionEditor";
+import FillInTheBlanksQuestionWidget from "./elements/FillInTheBlanksQuestionWidget";
+import EssayQuestionWidget from "./elements/EssayQuestionWidget";
+import {Button} from 'native-base';
 
 class Home extends React.Component {
     static navigationOptions = {
@@ -30,13 +30,15 @@ class Home extends React.Component {
 
     render() {
         return (
-            <ScrollView id={View.NO_ID}>
+            <ScrollView>
                 <StatusBar barStyle="light-content"/>
-                <FixedHeader/>
+                <FixedHeader navigation={this.props.navigation}/>
 
-                <Button title="Courses"
+                <Button full style={{margin: 10, borderRadius: 5}} primary
                         onPress={() => this.props.navigation
-                            .navigate('CourseList')}/>
+                            .navigate('CourseList')}>
+                    <Text>Courses</Text>
+                </Button>
 
             </ScrollView>
         )
@@ -55,11 +57,11 @@ const App = createStackNavigator({
     QuestionList,
     Assignment,
     ExamList,
-    Exam,
-    TrueFalseQuestionEditor,
-    MultipleChoiceQuestionEditor,
-    FillInTheBlanksQuestionEditor,
-    EssayQuestionEditor
+    ExamWidget,
+    TrueOrFalseQuestionWidget,
+    MultipleChoiceQuestionWidget,
+    FillInTheBlanksQuestionWidget,
+    EssayQuestionWidget
 
 });
 

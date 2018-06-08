@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View, Alert} from 'react-native'
+import {ScrollView, Alert} from 'react-native'
 import {Text, ListItem} from 'react-native-elements'
 import FetchServiceClient from "../services/FetchServiceClient";
 
@@ -28,15 +28,16 @@ class LessonList extends Component {
   }
   render() {
     return(
-      <View style={{padding: 15}}>
+      <ScrollView style={{padding: 15}}>
       {this.state.lessons.map(
         (lesson, index) => (
           <ListItem
             onPress={() => this.props.navigation
               .navigate("TopicList", {courseId:this.state.courseId,moduleId:this.state.moduleId,lessonId: lesson.id})}
             key={index}
-            title={lesson.title}/>))}
-      </View>
+            title={lesson.title}
+            leftIcon={{name:'description' ,color:'black'}}/>))}
+      </ScrollView>
     )
   }
 }

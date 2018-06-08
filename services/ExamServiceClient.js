@@ -14,39 +14,37 @@ class ExamServiceClient {
     }
 
     createExamUrl(){
-        const EXAM_API_URL = 'http://192.168.159.2:8080/api/exam';
+       // const EXAM_API_URL = 'http://192.168.159.2:8080/api/exam';
         // var url=window.location.href;
         // if(!url.toString().includes('10.0.0.22') && !url.toString().includes('localhost'))
-        //     return 'https://webdev-rastogi-shubham.herokuapp.com/api/course';
+             return 'https://webdev-rastogi-shubham.herokuapp.com/api/exam';
         // else
-        return EXAM_API_URL;
+        //return EXAM_API_URL;
 
     }
 
     createTopicUrl(){
-        const TOPIC_API_URL = 'http://192.168.159.2:8080/api/topic';
+        //const TOPIC_API_URL = 'http://192.168.159.2:8080/api/topic';
         // var url=window.location.href;
         // if(!url.toString().includes('10.0.0.22') && !url.toString().includes('localhost'))
-        //     return 'https://webdev-rastogi-shubham.herokuapp.com/api/course';
+             return 'https://webdev-rastogi-shubham.herokuapp.com/api/topic';
         // else
-        return TOPIC_API_URL;
+        //return TOPIC_API_URL;
 
     }
 
     createQuestionUrl(){
-        const QUESTIONS_API_URL = 'http://192.168.159.2:8080/api/question';
+        //const QUESTIONS_API_URL = 'http://192.168.159.2:8080/api/question';
         // var url=window.location.href;
         // if(!url.toString().includes('10.0.0.22') && !url.toString().includes('localhost'))
-        //     return 'https://webdev-rastogi-shubham.herokuapp.com/api/course';
+             return 'https://webdev-rastogi-shubham.herokuapp.com/api/question';
         // else
-        return QUESTIONS_API_URL;
+        //return QUESTIONS_API_URL;
 
     }
 
     createExam(topicId,exam) {
-        console.log(topicId);
-        console.log(exam);
-        return fetch(this.createTopicUrl()+'/'+topicId+'/'+'assignment',{
+        return fetch(this.createTopicUrl()+'/'+topicId+'/'+'exam',{
             body: JSON.stringify(exam),
             headers: {
                 'Content-Type': 'application/json'
@@ -61,8 +59,6 @@ class ExamServiceClient {
 
 
     updateExam(examId,exam) {
-        console.log(examId);
-        console.log(exam);
         return fetch(this.createExamUrl() + '/' + examId,
             {
                 body: JSON.stringify(exam),
@@ -95,11 +91,9 @@ class ExamServiceClient {
     }
 
     createMultipleChoiceQuestion(examId,multi){
-        console.log(examId);
         var choices=multi.choices;
         delete multi['choices']
         var output={multi:multi,choices:choices}
-        console.log(output);
         return fetch(this.createExamUrl()+'/'+examId+'/'+'choice',{
             body: JSON.stringify(output),
             headers: {
@@ -115,8 +109,6 @@ class ExamServiceClient {
     }
 
     createTrueFalseQuestion(examId,truefalse){
-        console.log(examId);
-        console.log(truefalse);
         return fetch(this.createExamUrl()+'/'+examId+'/'+'truefalse',{
             body: JSON.stringify(truefalse),
             headers: {
@@ -132,8 +124,6 @@ class ExamServiceClient {
     }
 
     createEssayQuestion(examId,essay){
-        console.log(examId);
-        console.log(essay);
         return fetch(this.createExamUrl()+'/'+examId+'/'+'essay',{
             body: JSON.stringify(essay),
             headers: {
@@ -149,10 +139,11 @@ class ExamServiceClient {
     }
 
     createFillInTheBlanksQuestion(examId,blanks){
-        console.log(examId);
-        console.log(blanks);
+        var vars=blanks.variables;
+        delete blanks['variables']
+        var output={fill:blanks,vars:vars}
         return fetch(this.createExamUrl()+'/'+examId+'/'+'blanks',{
-            body: JSON.stringify(blanks),
+            body: JSON.stringify(output),
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -166,8 +157,6 @@ class ExamServiceClient {
     }
 
     updateEssay(questionId,essay) {
-        console.log(questionId);
-        console.log(essay);
         return fetch( this.createQuestionUrl()+ '/' + questionId+'/essay',
             {
                 body: JSON.stringify(essay),
@@ -183,12 +172,9 @@ class ExamServiceClient {
     }
 
     updateMulti(questionId,multi) {
-        console.log(multi);
-
         var choices=multi.choices;
         delete multi['choices']
         var output={multi:multi,choices:choices}
-        console.log(output);
         return fetch( this.createQuestionUrl()+ '/' + questionId+'/multi',
             {
                 body: JSON.stringify(output),
@@ -204,11 +190,12 @@ class ExamServiceClient {
     }
 
     updateFillInTheBlanks(questionId,blanks) {
-        console.log(questionId);
-        console.log(blanks);
+        var vars=blanks.variables;
+        delete blanks['variables']
+        var output={fill:blanks,vars:vars}
         return fetch( this.createQuestionUrl()+ '/' + questionId+'/blanks',
             {
-                body: JSON.stringify(blanks),
+                body: JSON.stringify(output),
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -221,8 +208,6 @@ class ExamServiceClient {
     }
 
     updateTrueFalse(questionId,truefalse) {
-        console.log(questionId);
-        console.log(truefalse);
         return fetch( this.createQuestionUrl()+ '/' + questionId+'/truefalse',
             {
                 body: JSON.stringify(truefalse),
@@ -235,6 +220,14 @@ class ExamServiceClient {
                 return response.json();
             else return null;
         });
+    }
+
+    deleteQuestion(questionId,qType,callback) {
+        return fetch(this.createQuestionUrl() + '/' + questionId+'/'+qType,
+            {
+                method: 'DELETE'
+            }).then(callback);
+
     }
 }
 

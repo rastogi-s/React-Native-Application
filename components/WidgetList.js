@@ -1,15 +1,12 @@
 import React, {Component} from 'react'
-import {View, Alert} from 'react-native'
-import {Text, ListItem, Button} from 'react-native-elements'
-//import FetchServiceClient from "../services/FetchServiceClient";
-//import Assignment from "../elements/Assignment";
+import {View,ScrollView} from 'react-native'
+import {ListItem} from 'react-native-elements'
 
 class WidgetList extends Component {
     static navigationOptions = {title: 'Widgets'}
 
     constructor(props) {
         super(props);
-        //this.fetchServiceClient = FetchServiceClient.instance;
         this.state = {
             widgets: [],
             courseId: '',
@@ -37,7 +34,7 @@ class WidgetList extends Component {
 
     render() {
         return (
-            <View>
+            <ScrollView>
                 <View style={{padding: 15}}>
                     <ListItem
                         onPress={() => this.props.navigation
@@ -47,7 +44,8 @@ class WidgetList extends Component {
                                 lessonId: this.state.lessonId,
                                 topicId:this.state.topicId})}
                         key={1}
-                        title='Assignments'/>
+                        title='Assignments'
+                        leftIcon={{name:'assignment' ,color:'black'}}/>
                 </View>
                 <View style={{padding: 15}}>
                     <ListItem
@@ -59,9 +57,10 @@ class WidgetList extends Component {
                                 topicId:this.state.topicId
                             })}
                         key={2}
-                        title='Exams'/>
+                        title='Exams'
+                        leftIcon={{name:'assessment' ,color:'black'}}/>
                 </View>
-            </View>
+            </ScrollView>
         )
     }
 }
