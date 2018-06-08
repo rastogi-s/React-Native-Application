@@ -34,7 +34,7 @@ class Home extends React.Component {
                 <StatusBar barStyle="light-content"/>
                 <FixedHeader navigation={this.props.navigation}/>
 
-                <Button full style={{margin: 10, borderRadius: 5}} primary
+                <Button full style={{margin: 10, borderRadius: 5}} success
                         onPress={() => this.props.navigation
                             .navigate('CourseList')}>
                     <Text>Courses</Text>
