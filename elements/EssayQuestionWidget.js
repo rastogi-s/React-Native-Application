@@ -47,10 +47,7 @@ class EssayQuestionWidget extends React.Component {
         const {navigation} = this.props;
         const examId = navigation.getParam("examId");
         const question = navigation.getParam("question");
-        const unMount = navigation.getParam("unMount");
         console.log("inside essay");
-        console.log(unMount);
-
         if (!this.isEmpty(question)) {
             this.setState({
 
@@ -59,7 +56,6 @@ class EssayQuestionWidget extends React.Component {
                 description: question.description,
                 id: question.id,
                 points: question.points,
-                unMount:unMount
 
             })
         }
@@ -69,13 +65,6 @@ class EssayQuestionWidget extends React.Component {
             });
         }
     }
-
-    // componentWillUnmount(){
-    //
-    //     console.log(this.state.unMount);
-    //
-    //     this.state.unMount();
-    // }
 
 
     addQuestion() {
@@ -89,7 +78,6 @@ class EssayQuestionWidget extends React.Component {
                 this.props.navigation
                     .navigate("QuestionList", {
                         examId: this.state.examId,
-                        unMount:this.state.unMount
                     })
             )
         }
@@ -101,8 +89,7 @@ class EssayQuestionWidget extends React.Component {
             }).then(
                 this.props.navigation
                     .navigate("QuestionList", {
-                        examId: this.state.examId,
-                        unMount:this.state.unMount
+                        examId: this.state.examId
 
                     })
             )

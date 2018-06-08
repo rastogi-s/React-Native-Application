@@ -80,7 +80,7 @@ class FillInTheBlanksQuestionWidget extends React.Component {
 
         var newArr = []
         for (var i = 0; i < arr.length; i++) {
-            newArr.push(<Text key={i}>{arr[i]}</Text>);
+            newArr.push(<Text style={{fontSize: 20, marginTop: 5, marginLeft: 18}} key={i}>{arr[i]}</Text>);
             if (arr.length > 1 && i < arr.length - 1)
                 newArr.push(<Input style={{backgroundColor: 'white', borderRadius: 5, padding: 5, margin: 5}}
                                    key={i + 100}/>)
@@ -93,7 +93,7 @@ class FillInTheBlanksQuestionWidget extends React.Component {
         const examId = navigation.getParam("examId");
         const question = navigation.getParam("question");
         //const questionId = navigation.getParam("questionId");
-        const unMount = navigation.getParam("unMount");
+        //const unMount = navigation.getParam("unMount");
         if (!this.isEmpty(question)) {
             this.setState({
 
@@ -104,7 +104,7 @@ class FillInTheBlanksQuestionWidget extends React.Component {
                 points: question.points,
                 variables: question.variables,
                 previewDesc: question.description,
-                unMount:unMount
+                //unMount:unMount
 
             })
 
@@ -219,7 +219,9 @@ class FillInTheBlanksQuestionWidget extends React.Component {
                             </View>
                         </View>
                         {/*<Text style={{fontSize: 20, marginTop: 5,marginLeft:18}}>*/}
+                        {/*<View style={{flexDirection: 'row'}}>*/}
                         {this.modifyDescription()}
+                        {/*</View>*/}
                         {/*</Text>*/}
                     </View>}
                     <Button full style={{margin: 10, borderRadius: 5}} success onPress={this.addQuestion}>

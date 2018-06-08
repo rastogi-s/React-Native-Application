@@ -14,12 +14,12 @@ class FetchServiceClient {
     }
 
     createCourseUrl(){
-       // const COURSE_API_URL = 'http://192.168.159.2:8080/api/course';
+      // const COURSE_API_URL = 'http://192.168.159.2:8080/api/course';
         // var url=window.location.href;
         // if(!url.toString().includes('10.0.0.22') && !url.toString().includes('localhost'))
              return 'https://webdev-rastogi-shubham.herokuapp.com/api/course';
         // else
-           // return COURSE_API_URL;
+          //  return COURSE_API_URL;
 
     }
 

@@ -14,7 +14,7 @@ class ExamServiceClient {
     }
 
     createExamUrl(){
-       // const EXAM_API_URL = 'http://192.168.159.2:8080/api/exam';
+       //const EXAM_API_URL = 'http://192.168.159.2:8080/api/exam';
         // var url=window.location.href;
         // if(!url.toString().includes('10.0.0.22') && !url.toString().includes('localhost'))
              return 'https://webdev-rastogi-shubham.herokuapp.com/api/exam';

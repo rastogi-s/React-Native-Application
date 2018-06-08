@@ -1,6 +1,8 @@
 import React from 'react'
 import {Picker, StyleSheet, Text, View} from 'react-native'
-import {Button} from 'native-base';
+import {
+    Button
+} from 'native-base';
 
 class QuestionTypePicker extends React.Component {
     constructor(props) {
@@ -12,23 +14,15 @@ class QuestionTypePicker extends React.Component {
 
     componentDidMount() {
         const examId = this.props.examId;
-        var unMount = this.props.unMount;
-        console.log(unMount);
         this.setState({
-            examId: examId,
-            unMount:unMount
-
+            examId: examId
         })
     }
 
     componentWillReceiveProps(props) {
-
         const examId = props.examId;
-        var unMount = props.unMount;
-        console.log(unMount);
         this.setState({
-            examId: examId,
-            unMount:unMount
+            examId: examId
         })
     }
 
@@ -47,8 +41,7 @@ class QuestionTypePicker extends React.Component {
                 <Button full style={styles.button} disabled={this.state.questionType==''}
                         onPress={() => this.props.navigation.navigate(this.state.questionType, {
                             examId: this.state.examId,
-                            question: {},
-                            unMount:this.state.unMount
+                            question: {}
                         })} success><Text>Add Questions</Text></Button>
             </View>
         )

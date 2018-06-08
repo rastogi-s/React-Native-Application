@@ -55,7 +55,7 @@ class TrueOrFalseQuestionWidget extends React.Component {
         const {navigation} = this.props;
         const examId = navigation.getParam("examId");
         const question = navigation.getParam("question");
-        const unMount = navigation.getParam("unMount")
+        //const unMount = navigation.getParam("unMount")
 
         if (!this.isEmpty(question)) {
             this.setState({
@@ -66,7 +66,7 @@ class TrueOrFalseQuestionWidget extends React.Component {
                 id: question.id,
                 points: question.points,
                 isTrue: (question.isTrue) ? true : false,
-                unMount:unMount
+                //unMount:unMount
 
             })
         }

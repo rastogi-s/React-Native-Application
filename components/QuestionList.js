@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {ScrollView, StyleSheet} from 'react-native'
-import { ListItem} from 'react-native-elements'
+import {Text, ListItem} from 'react-native-elements'
 import ExamServiceClient from "../services/ExamServiceClient";
 import {Icon} from 'native-base';
 import QuestionTypePicker from "../elements/QuestionTypePicker";
@@ -105,7 +105,7 @@ class QuestionList extends Component {
 
                 ))}
 
-                <QuestionTypePicker examId={this.state.examId} navigation={this.props.navigation} unMount={this.updateList}/>
+                <QuestionTypePicker examId={this.state.examId} navigation={this.props.navigation} />
             </ScrollView>
         )
     }

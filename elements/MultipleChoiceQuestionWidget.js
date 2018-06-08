@@ -58,7 +58,7 @@ class MultipleChoiceQuestionWidget extends React.Component {
         const examId = navigation.getParam("examId");
         const question = navigation.getParam("question");
         //const questionId = navigation.getParam("questionId");
-        const unMount = navigation.getParam("unMount")
+        //const unMount = navigation.getParam("unMount")
         if(!this.isEmpty(question)) {
             this.setState({
 
@@ -69,7 +69,7 @@ class MultipleChoiceQuestionWidget extends React.Component {
                 points: question.points,
                 choice: question.choice,
                 choices: question.choices,
-                unMount:unMount
+                //unMount:unMount
 
             })
         }

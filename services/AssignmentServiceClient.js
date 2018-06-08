@@ -14,7 +14,7 @@ class AssignmentServiceClient {
     }
 
     createAssignmentUrl(){
-        //const ASSIGNMENT_API_URL = 'http://192.168.159.2:8080/api/assignment';
+       // const ASSIGNMENT_API_URL = 'http://10.110.3.134:8080/api/assignment';
         // var url=window.location.href;
         // if(!url.toString().includes('10.0.0.22') && !url.toString().includes('localhost'))
              return 'https://webdev-rastogi-shubham.herokuapp.com/api/assignment';
@@ -25,12 +25,12 @@ class AssignmentServiceClient {
 
 
     createTopicUrl(){
-        // const TOPIC_API_URL = 'http://192.168.159.2:8080/api/topic';
+        // const TOPIC_API_URL = 'http://10.110.3.134:8080/api/topic';
         // // var url=window.location.href;
         // // if(!url.toString().includes('10.0.0.22') && !url.toString().includes('localhost'))
              return 'https://webdev-rastogi-shubham.herokuapp.com/api/topic';
         // // else
-        // return TOPIC_API_URL;
+         //return TOPIC_API_URL;
 
     }
 
